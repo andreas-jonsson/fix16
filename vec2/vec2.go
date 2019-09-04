@@ -7,6 +7,21 @@ import (
 	"github.com/andreas-jonsson/fix16"
 )
 
+func Rectangle(r image.Rectangle) T {
+	if r.Min != image.ZP {
+		panic("rectangle min is not zero")
+	}
+	return Point(r.Max)
+}
+
+func Point(pt image.Point) T {
+	return Int(pt.X, pt.Y)
+}
+
+func Int(x, y int) T {
+	return T{fix16.Int(x), fix16.Int(y)}
+}
+
 type T [2]fix16.T
 
 func (v T) String() string {
