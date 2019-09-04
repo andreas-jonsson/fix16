@@ -20,6 +20,13 @@ func TestSimpleSub(t *testing.T) {
 	if a.Sub(b).Float64() != 1.25 {
 		t.Fail()
 	}
+
+	a = Parse("-1.25")
+	b = Parse("1.25")
+
+	if a != -b {
+		t.Fail()
+	}
 }
 
 func TestSimpleMul(t *testing.T) {

@@ -20,6 +20,22 @@ func (v T) Y() fix16.T {
 	return v[1]
 }
 
+func (v T) Add(b T) T {
+	return T{v[0].Add(b[0]), v[1].Add(b[1])}
+}
+
+func (v T) Sub(b T) T {
+	return T{v[0].Sub(b[0]), v[1].Sub(b[1])}
+}
+
+func (v T) Mul(b T) T {
+	return T{v[0].Mul(b[0]), v[1].Mul(b[1])}
+}
+
+func (v T) Div(b T) T {
+	return T{v[0].Div(b[0]), v[1].Div(b[1])}
+}
+
 func (v T) Length() fix16.T {
 	return v.LengthSqr().Sqrt()
 }
