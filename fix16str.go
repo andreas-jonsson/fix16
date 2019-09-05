@@ -24,9 +24,9 @@ func itoaLoop(buf *bytes.Buffer, scale, value uint32, skip bool) {
 }
 
 func (a T) doFormat(buf *bytes.Buffer, decimals int) {
-	uvalue := uint32(a)
-	if a < 0 {
-		uvalue = uint32(-a)
+	uvalue := uint32(a.f)
+	if a.f < 0 {
+		uvalue = uint32(-a.f)
 		buf.WriteRune('-')
 	}
 
@@ -37,7 +37,7 @@ func (a T) doFormat(buf *bytes.Buffer, decimals int) {
 	intpart := uvalue >> 16
 	fracpart := uvalue & 0xFFFF
 	scale := scales[decimals]
-	fracpart = uint32(T(fracpart).Mul(T(scale)))
+	fracpart = Binary(fracpart).Mul(Binary(scale)).Binary()
 
 	if fracpart >= scale {
 		intpart++
@@ -64,7 +64,7 @@ func (a T) Format(decimals int) string {
 func Parse(s string) T {
 	s = strings.TrimSpace(s)
 	if len(s) == 0 {
-		return 0
+		return Zero
 	}
 
 	r := strings.NewReader(s)
@@ -75,22 +75,22 @@ func Parse(s string) T {
 
 	d, err := r.ReadByte()
 	if err != nil {
-		return 0
+		return Zero
 	}
 
 	switch {
 	case d == '-':
 		negative = true
 		if d, err = r.ReadByte(); err != nil {
-			return 0
+			return Zero
 		}
 	case d == '+':
 		if d, err = r.ReadByte(); err != nil {
-			return 0
+			return Zero
 		}
 	case isDigit(d):
 	default:
-		return 0
+		return Zero
 	}
 
 	var (
@@ -113,14 +113,14 @@ func Parse(s string) T {
 		return Overflow
 	}
 
-	a := T(intPart << 16)
+	a := Binary(intPart << 16)
 	if err != nil {
 		return a
 	}
 
 	if d == '.' || d == ',' {
 		if d, err = r.ReadByte(); err != nil {
-			return 0
+			return Zero
 		}
 
 		var (
@@ -139,7 +139,7 @@ func Parse(s string) T {
 			}
 		}
 
-		a = a.Add(T(fracPart).Div(T(scale)))
+		a = a.Add(Int(fracPart).Div(Int(scale)))
 	}
 
 	if _, err := r.ReadByte(); err == nil {
@@ -147,7 +147,7 @@ func Parse(s string) T {
 	}
 
 	if negative {
-		return -a
+		return a.Inv()
 	}
 	return a
 }

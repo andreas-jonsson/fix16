@@ -73,12 +73,12 @@ func (v T) Scale(s fix16.T) T {
 }
 
 func (v T) Invert() T {
-	return T{-v.X(), -v.Y()}
+	return T{v.X().Inv(), v.Y().Inv()}
 }
 
 func (v T) Normalize() T {
 	sl := v.LengthSqr()
-	if sl == 0 || sl == 1 {
+	if sl == fix16.Zero || sl == fix16.Binary(1) {
 		return v
 	}
 	s := fix16.One.Div(sl.Sqrt())
