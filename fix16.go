@@ -36,6 +36,14 @@ func Uint32(a uint32) T {
 	return Int32(int32(a))
 }
 
+func Int64(a int64) T {
+	return Int32(int32(a))
+}
+
+func Uint64(a uint64) T {
+	return Uint32(uint32(a))
+}
+
 func Float32(a float32) T {
 	return Float64(float64(a))
 }
@@ -75,13 +83,27 @@ func (a T) Uint32() uint32 {
 	return uint32(a.Int32())
 }
 
-func (a T) Split() (int32, T) {
-	b := a.Binary()
-	f := Binary(b & 0x0000FFFF)
-	if a.Negative() {
-		return -int32((b & 0x7FFFFFFF) >> 16), f
+func (a T) Int64() int64 {
+	return int64(a.Int32())
+}
+
+func (a T) Uint64() uint64 {
+	return uint64(a.Int32())
+}
+
+func (a T) Split() (T, T) {
+	n := a.Negative()
+	if n {
+		a = a.Inv()
 	}
-	return int32(b >> 16), f
+
+	i := a.Floor()
+	f := a.Sub(i)
+
+	if n {
+		i = i.Inv()
+	}
+	return i, f
 }
 
 func (a T) Add(b T) T {

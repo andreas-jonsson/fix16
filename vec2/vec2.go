@@ -69,8 +69,10 @@ func (v T) Length() fix16.T {
 */
 
 func (v T) Length() fix16.T {
-	xi, xf := v.X().Split()
-	yi, yf := v.Y().Split()
+	x, xf := v.X().Split()
+	y, yf := v.Y().Split()
+
+	xi, yi := x.Int64(), y.Int64()
 
 	// TODO: Remove math package.
 	il := int32(math.Sqrt(float64(int64(yi)*int64(yi) + int64(xi)*int64(xi))))
