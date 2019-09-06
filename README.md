@@ -1,5 +1,7 @@
 # Go fixed point math package
 
+[![Build Status](https://travis-ci.com/andreas-jonsson/fix16.svg?branch=master)](https://travis-ci.com/andreas-jonsson/fix16)
+
 Native Go package for Q16.16 fixed point math and a basic two component fixed math vector type.
 
 #### References:
