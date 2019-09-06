@@ -9,7 +9,7 @@ import (
 func TestLength(t *testing.T) {
 	v := T{fix16.Float64(2.2), fix16.Float64(1.5)}
 
-	if v.Length().Format(4) != "2.6627" {
+	if v.Length().Format(4) != "2.5385" {
 		t.Fail()
 	}
 }

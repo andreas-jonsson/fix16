@@ -75,6 +75,15 @@ func (a T) Uint32() uint32 {
 	return uint32(a.Int32())
 }
 
+func (a T) Split() (int32, T) {
+	b := a.Binary()
+	f := Binary(b & 0x0000FFFF)
+	if a.Negative() {
+		return -int32((b & 0x7FFFFFFF) >> 16), f
+	}
+	return int32(b >> 16), f
+}
+
 func (a T) Add(b T) T {
 	ua := uint32(a.f)
 	ub := uint32(b.f)

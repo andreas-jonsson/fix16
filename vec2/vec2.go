@@ -3,6 +3,7 @@ package vec2
 import (
 	"fmt"
 	"image"
+	"math"
 
 	"github.com/andreas-jonsson/fix16"
 )
@@ -60,12 +61,22 @@ func (v T) Div(b T) T {
 	return T{v.X().Div(b.X()), v.Y().Div(b.Y())}
 }
 
+/*
 func (v T) Length() fix16.T {
-	return v.LengthSqr().Sqrt()
+	sl := v.X().Mul(v.X()).Add(v.Y().Mul(v.Y()))
+	return sl.Sqrt()
 }
+*/
 
-func (v T) LengthSqr() fix16.T {
-	return v.X().Mul(v.X()).Add(v.Y().Mul(v.Y()))
+func (v T) Length() fix16.T {
+	xi, xf := v.X().Split()
+	yi, yf := v.Y().Split()
+
+	// TODO: Remove math package.
+	il := int32(math.Sqrt(float64(int64(yi)*int64(yi) + int64(xi)*int64(xi))))
+	fl := xf.Mul(xf).Add(yf.Mul(yf)).Sqrt()
+
+	return fix16.Int32(il).Add(fl)
 }
 
 func (v T) Scale(s fix16.T) T {
@@ -77,11 +88,11 @@ func (v T) Invert() T {
 }
 
 func (v T) Normalize() T {
-	sl := v.LengthSqr()
-	if sl == fix16.Zero || sl == fix16.Binary(1) {
+	l := v.Length()
+	if l == fix16.Zero || l == fix16.Binary(1) {
 		return v
 	}
-	s := fix16.One.Div(sl.Sqrt())
+	s := fix16.One.Div(l)
 	return v.Scale(s)
 }
 
