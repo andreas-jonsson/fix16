@@ -3,7 +3,6 @@ package vec2
 import (
 	"fmt"
 	"image"
-	"math"
 
 	"github.com/andreas-jonsson/fix16"
 )
@@ -61,21 +60,44 @@ func (v T) Div(b T) T {
 	return T{v.X().Div(b.X()), v.Y().Div(b.Y())}
 }
 
-/*
-func (v T) Length() fix16.T {
-	sl := v.X().Mul(v.X()).Add(v.Y().Mul(v.Y()))
-	return sl.Sqrt()
+func floorSqrt(x int32) int32 {
+	if x == 0 || x == 1 {
+		return x
+	}
+
+	var (
+		start int32 = 1
+		end         = x
+		res   int32
+	)
+
+	for start <= end {
+		mid := (start + end) / 2
+
+		// If x is a perfect square.
+		if mid*mid == x {
+			return mid
+		}
+
+		// Since we need floor, we update answer when mid*mid is
+		// smaller than x, and move closer to sqrt(x).
+		if mid*mid < x {
+			start = mid + 1
+			res = mid
+		} else { // If mid*mid is greater than x.
+			end = mid - 1
+		}
+	}
+	return res
 }
-*/
 
 func (v T) Length() fix16.T {
 	x, xf := v.X().Split()
 	y, yf := v.Y().Split()
 
-	xi, yi := x.Int64(), y.Int64()
+	xi, yi := x.Int32(), y.Int32()
 
-	// TODO: Remove math package.
-	il := int32(math.Sqrt(float64(int64(yi)*int64(yi) + int64(xi)*int64(xi))))
+	il := floorSqrt(yi*yi + xi*xi)
 	fl := xf.Mul(xf).Add(yf.Mul(yf)).Sqrt()
 
 	return fix16.Int32(il).Add(fl)
