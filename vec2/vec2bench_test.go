@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+
+	"github.com/andreas-jonsson/fix16"
 )
 
 func BenchmarkFloorSqrt(b *testing.B) {
@@ -15,5 +17,11 @@ func BenchmarkFloorSqrt(b *testing.B) {
 			}
 		})
 	}
+}
 
+func BenchmarkLength(b *testing.B) {
+	v := T{fix16.Int32(rand.Int31()), fix16.Int32(rand.Int31())}
+	for n := 0; n < b.N; n++ {
+		v.Length()
+	}
 }
