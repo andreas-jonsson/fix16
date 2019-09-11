@@ -60,15 +60,15 @@ func (v T) Div(b T) T {
 	return T{v.X().Div(b.X()), v.Y().Div(b.Y())}
 }
 
-func floorSqrt(x int32) int32 {
+func floorSqrt(x int64) int64 {
 	if x == 0 || x == 1 {
 		return x
 	}
 
 	var (
-		start int32 = 1
+		start int64 = 1
 		end         = x
-		res   int32
+		res   int64
 	)
 
 	for start <= end {
@@ -95,12 +95,12 @@ func (v T) Length() fix16.T {
 	x, xf := v.X().Split()
 	y, yf := v.Y().Split()
 
-	xi, yi := x.Int32(), y.Int32()
+	xi, yi := x.Int64(), y.Int64()
 
 	il := floorSqrt(yi*yi + xi*xi)
 	fl := xf.Mul(xf).Add(yf.Mul(yf)).Sqrt()
 
-	return fix16.Int32(il).Add(fl)
+	return fix16.Int64(il).Add(fl)
 }
 
 func (v T) Scale(s fix16.T) T {
