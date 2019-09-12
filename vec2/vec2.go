@@ -75,13 +75,14 @@ func floorSqrt(x int32) int32 {
 		mid := (start + end) / 2
 
 		// If x is a perfect square.
-		if mid*mid == x {
+		sprt := mid * mid
+		if sprt == x {
 			return mid
 		}
 
 		// Since we need floor, we update answer when mid*mid is
 		// smaller than x, and move closer to sqrt(x).
-		if mid*mid < x {
+		if sprt < x {
 			start = mid + 1
 			res = mid
 		} else { // If mid*mid is greater than x.
